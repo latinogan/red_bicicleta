@@ -19,7 +19,8 @@ Bicicleta.prototype.toString= function (){
  	if (aBici) 
  		return aBici;
  	else
- 	    throw new Error	(`No existe una Bicicleta con el id ${aBiciId}`);	
+ 	 throw new Error(`No existe una Bicicleta con el id ${aBiciId}`);	
+ 	
 }
 
 Bicicleta.removeById =function (aBiciId){
