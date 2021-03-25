@@ -9,8 +9,16 @@ var usersRouter = require('./routes/users');
 var bicicletasRouter = require('./routes/bicicletas');
 var bicicletasAPIRouter = require('./routes/api/bicicletas');
 
-
 var app = express();
+
+var mongoose = require('mongoose')
+
+var mongoDB = 'mongodb://localhost/red_bicicletas';
+mongoose.connect(mongoDB,{ useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.promise = global.promise;
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'mongoDB connection error:'));
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

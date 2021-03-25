@@ -3,8 +3,7 @@ var request =require ('request');
 var server = require ('../../bin/www');
 
 
-
-describe ('Bicicleta API' , () => {
+/*describe ('Bicicleta API' , () => {
 	describe ('GET BICICLETAS /', () => {
 		it('Status 200', () => {
 			expect(Bicicleta.allBicis.length).toBe(0);
@@ -21,7 +20,7 @@ describe ('Bicicleta API' , () => {
 	 describe('POST BICICLETAS/create',() => {
 		it('STATUS 200', (done) => {
 			var headers = {'content-type' : 'application/json'};
-			/*var aBici = "{"id": 10, "color": "rojo", "modelo":"urbana", "lat":-34 ,"ing":-54}";*/
+			/*var aBici = "{"id": 10, "color": "rojo", "modelo":"urbana", "lat":-34 ,"ing":-54}";
 			request.post({
 			    headers:headers,
 			    url:   'http://localhost:5000/api/bicicletas/create',
@@ -33,7 +32,7 @@ describe ('Bicicleta API' , () => {
 			});
 		});
     });
- });
+ });*/
 
 
 
