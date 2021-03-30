@@ -60,12 +60,12 @@ usuarioSchema.pre('save' , function (next) {
 
 });
 
-usuarioSchema.methods.validpassword= function ( password){
+usuarioSchema.methods.validPassword= function ( password){
 	return bcrypt.compareSync(password, this.password);
-}
+};
 
-usuarioSchema.methods.reserva = function (biciId,desde,hasta,cb) {
-	var reserva = new Reserva ({usuario: this.id, bicicleta: biciId, desde: desde, hasta:hasta})
+usuarioSchema.methods.reservar = function (biciId,desde,hasta,cb) {
+	var reserva = new Reserva ({usuario: this.id, bicicleta: biciId, desde: desde, hasta:hasta});
 		console.log(reserva);
 		reserva.save(cb);
 
@@ -77,18 +77,22 @@ usuarioSchema.methods.enviar_email_bienvenida = function (cb) {
 	token.save(function (err){
 		if(err){return console.log(err.message); }
 
+		console.log('se ha enviado un email de bienvenida a' +email_destination +'.');
+
+
 		const mailoptions ={
 			from : 'no-reply@redbicicleta.com',
 			to: email_destination,
 			subject: 'verificacion de cuenta',
-			text: 'hola'+ 'por favor. para verificar su cuenta haga click en este link:\n'+'http://localhost:3000' + '/\ token/confirmation\/'
+			text: 'HOLA,\n\npor favor, para verificar su cuenta haga click en este link:\n'+'http://localhost:3000' + '\/ token/confirmation\/'+tokken.token+'.\n'
 		};
+
 		mailer.sendMail(mailOptions, function (err) {
 			if(err){ return console.log(err.message); }
 
 			console.log ('verification email has been send to' + email_destination + '.')
-		})
-	})
+		});
+	});
 }
 
 

@@ -6,7 +6,7 @@ var Reserva = require ('../../models/reserva');
 describe ('Testing Usuarios', function(){
 	beforeEach ( function (done) {
 		var mongoDB = 'mongodb://localhost/testdb';
-		mongoose.connect(mongoDB, {userNewUrlParser: true});
+		mongoose.connect(mongoDB, {useNewUrlParser: true});
 
 		const db = mongoose.connection;
 		db.on('error', console.error.bind (console, 'conection error'));
