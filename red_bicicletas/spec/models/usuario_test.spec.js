@@ -9,7 +9,7 @@ describe ('Testing Usuarios', function(){
 		mongoose.connect(mongoDB, {userNewUrlParser: true});
 
 		const db = mongoose.connection;
-		db.on('error', console.error.bind (console. 'connection error'));
+		db.on('error', console.error.bind (console, 'conection error'));
 		db.once ('open', function () {
 			console.log('We are conected to test data base');
 
@@ -19,18 +19,18 @@ describe ('Testing Usuarios', function(){
 
 	afterEach ( function (done) {
 		Reserva.deleteMany ( {}, function ( err,success){
-			it ( err) console.log(err);
+			if ( err) console.log(err);
 			Usuario.deleteMany({}, function (err,success) {
-				it (err) console.log (err);
+				if (err) console.log (err);
 				Bicicleta.deleteMany({}, function (err, success){
-					it (err) console.log (err);
+					if (err) console.log (err);
 					done();
 				});
 
 			});
 		});
 	});
-
+});
 
 
 
