@@ -1,7 +1,7 @@
-
-
 .form-heading{
-	color: #fff; font-size:100px; 
+	color: #fff; 
+	font-size:23px; 
+
 }  
 
 .panel h2{
@@ -18,7 +18,7 @@
 .login-form .form-control{
 	background: #f7f7f7 none repeat scroll 0 0;
 	border: 1px solid #d4d4d4;
-	border-radius: 50px;
+	border-radius: 4px;
 	font-size: 14px;
 	height: 50px;
 	line-height: 50px;
@@ -27,11 +27,12 @@
 	background: #ffffff none repeat scrol 0 0;
 	border-radius: 2px;
 	margin: 10px auto 30px;
-	max-width: 38;
+	max-width: 38%;
 	padding: 50px 70px 70px 71px;
 }
 .login-form .form-group{
 	margin-bottom: 10px;
+
 }
 .login-form{
 	text-align: center;
@@ -44,14 +45,16 @@
 .login-form .btn.btn-primary{
 	background: #f0ad4e none repeat scroll 0 0;
 	border-color:#f0ad4e;
+	color: #ffffff
 	font-size: 14px;
-	width: 100px;
+	width: 100%;
 	height: 50px;
 	line-height: 50px;
 	padding: 0px;
 }
 .forgot{
-	text-align: left;margin-bottom: 30px;
+	text-align: left;
+	margin-bottom: 30px;
 }
 .botto-text{
 	color: #ffffff;
@@ -71,3 +74,5 @@
 	font-size: 13px;
 	text-decoration: none;
 }
+body {
+ background-image: url("https://c8.alamy.com/compes/awjrcd/ciclista-mirando-el-mar-vista-trasera-silueta-awjrcd.jpg"); 
