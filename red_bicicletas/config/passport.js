@@ -1,10 +1,10 @@
 const passport = require ('passport');
 const LocalStrategy = require ('passport-local').Strategy;
 const Usuario = require ('../models/usuario');
-const GoogleStrategy = require ('passport-google-oauth20').Strategy;
-const FacebookTokenStrategy = require ('passport-facebook-token');
+//const GoogleStrategy = require ('passport-google-oauth20').Strategy;
+//const FacebookTokenStrategy = require ('passport-facebook-token');
 
-passport.use(new FacebookTokenStrategy ({
+/*passport.use(new FacebookTokenStrategy ({
 	clientID: process.env.FACEBOOK_ID,
 	clientSecret: process.env.FACEBOOK_SECRET
 },function (accessToken, refreshToken,profile, done){
@@ -18,7 +18,7 @@ passport.use(new FacebookTokenStrategy ({
 		console.log(err2);
 		return done(err2,null);
 	}
-}));
+}));*/
 
 passport.use(new LocalStrategy(
 	function(email,password,done){
@@ -33,12 +33,12 @@ passport.use(new LocalStrategy(
 
 ));
 
-passport.use(new GoogleStrategy ({
+/*passport.use(new GoogleStrategy ({
 	clientID: process.env.GOOGLE_CLIENT_ID,
 	clientSecret: process.env.HOST + '/auth/google/callback'
-},
+},*/
 
-    function (accessToken,refreshToken,profile,cb) {
+   /* function (accessToken,refreshToken,profile,cb) {
     	console.log(profile);
 
 
@@ -46,7 +46,7 @@ passport.use(new GoogleStrategy ({
     		return cb(err,user);
     	});
     }
-));
+//));*/
 
 passport.deserializeUser(function (id,cd) {
 	Usuario.findById(id,function (err,usuario) {
