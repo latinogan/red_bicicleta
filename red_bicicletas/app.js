@@ -123,7 +123,7 @@ app.use('/', indexRouter);
 app.use('/usuarios', usuariosRouter);
 app.use('/token',tokenRouter);
 
-app.use('/bicicletas', bicicletasRouter);
+app.use('/bicicletas',loggedIn, bicicletasRouter);
 app.use('/api/bicicletas', bicicletasAPIRouter);//validarUsuario
 app.use('/api/usuarios',usuariosAPIRouter);
 
@@ -153,19 +153,16 @@ function loggedIn(req,res,next){
 	}
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function validarUsuario(req,res,next){
+  jwt.verify(req.headers['x-access-token'],req.app.get('secretKey'), function(err,decode) {
+  	if(err){
+  		res.json({ status:"error",message: err.message , data:null});
+  	}else{
+  		req.body.id=decode.id;
+  		console.log('jwt verify: ' + decode);
+  		next();
+  	}
+  });
+}
 
 module.exports = app;
