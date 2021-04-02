@@ -4,7 +4,7 @@ const Usuario = require ('../models/usuario');
 //const GoogleStrategy = require ('passport-google-oauth20').Strategy;
 //const FacebookTokenStrategy = require ('passport-facebook-token');
 
-/*passport.use(new FacebookTokenStrategy ({
+/*passport.use(new facebookStrategy ({
 	clientID: process.env.FACEBOOK_ID,
 	clientSecret: process.env.FACEBOOK_SECRET
 },function (accessToken, refreshToken,profile, done){
@@ -48,11 +48,17 @@ passport.use(new LocalStrategy(
     }
 //));*/
 
+passport.serialUser(function (user,cb){
+	cb(null,user,id);
+});
+
 passport.deserializeUser(function (id,cd) {
 	Usuario.findById(id,function (err,usuario) {
 		cb(err,usuario);
 	});
 });
+
+
 module.exports=passport;
 
 
