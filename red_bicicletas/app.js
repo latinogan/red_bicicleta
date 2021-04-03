@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -16,12 +17,15 @@ var usuariosAPIRouter= require ('./routes/api/usuarios');
 var authAPIRouter= require ('./routes/api/auth');
 
 const Usuario = require ('./models/usuario');
-const Token= require('.models/token');
+const Token= require('./models/token');
 
-usuario.validarUsuario(token);
+/*Usuario.validarUsuario(token);*/
 const store = new session.MemoryStore;
 
 var app = express();
+
+app.set('secretKey','jwt_pwd_!!223344');
+
 app.use(session({
   cookie: { maxAge: 240*60*60*1000},
   store:store,
@@ -33,11 +37,18 @@ app.use(session({
 
 var mongoose = require('mongoose')
 
-var mongoDB = 'mongodb://localhost/red_bicicletas';
+//var mongoDB = 'mongodb://localhost/red_bicicletas';
+//var mongoDB = mongodb+srv://admin:<password>@cluster0.xjau6.mongodb.net/test
+var mongoDB ='mongodb+srv://admin:zfL2KF5GKreSKeqr@cluster0.xjau6.mongodb.net/test'
+
 mongoose.connect(mongoDB,{ useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
+
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', function (){
+	console.log('coneccion exitosa a la base de datos red_bicicletas');
+});
 
 
 // view engine setup
@@ -63,7 +74,7 @@ app.post('/login', function ( req, res,next) {
   	if(!usuario) return res.render('session/login', {info});
   	req.login(usuario, function (err) {
   		if (err) return next (err);
-  		return res.redirect ('');
+  		return res.redirect ('/');
   	});
   })(req,res,next);
 });
@@ -78,32 +89,32 @@ app.get('/forgotPassword', function(req,res){
 });
 
 app.post('/forgotPassword', function(req,res){
-	usuarios.findOne({email:req.body.email} , function(err,usuario){
-		if(!usuario) return res.render('session/forgot-password',{info: {message: 'No existe el email para un usuario existente'} });
+	Usuarios.findOne({email:req.body.email} , function(err,usuario){
+		if(!usuario) return res.render('session/forgotPassword',{info: {message: 'No existe el email para un usuario existente'} });
 
 		usuario.resetPassword(function(err) {
 			if (err) return next (err);
-			console.log('session/forgot-password-message');
+			console.log('session/forgotPasswordMessage');
 		});
-		res.render('session/forgot-password-message');
+		res.render('session/forgotPasswordMessage');
 	});
 });
 
-app.get('/reset-password/:token' , function (req,res,next) {
+app.get('/resetPassword/:token' , function (req,res,next) {
 	Token.findOne({token: req.params.token}, function (err,token){
 		if(!token)return res.status(400).send({type:'not-verified',msg:'No existe un usuario asociado al token no haya expirado'});
 
 		Usuario.findById(token._userId, function(err,usuario) {
 			if(!usuario) return res.status(400).send({msg: 'No existe un usuario asociado al token'});
 
-			res.render('session/reset-password', {errors:{} , usuario:usuario});
+			res.render('session/resetPassword', {errors:{} , usuario:usuario});
 		});
 	});
 });
 
-app.post('/reset-password', function (req,res ) {
+app.post('/resetPassword', function (req,res ) {
 	if(req.body.password != req.body.confirm_password){
-		res.render('session/reset-password' ,{
+		res.render('session/resetPassword' ,{
 			errors:{ confirm_password: {message: 'No coincide con el password ingresado'} },
 			usuario: new Usuario ({email: req.body.email})
 		});
@@ -113,7 +124,7 @@ app.post('/reset-password', function (req,res ) {
 		usuario.password=req.body.password;
 		usuario.save(function (err){
 			if (err){ 
-			  res.render('session/reset-password', {errors: err.errors, usuario: new Usuario ({email:req.body.email }) });
+			  res.render('session/resetPassword', {errors: err.errors, usuario: new Usuario ({email:req.body.email }) });
             }else {
             	res.redirect('/login');
             }
@@ -133,6 +144,7 @@ app.use('/api/auth',authAPIRouter);
 app.use('/bicicletas',loggedIn, bicicletasRouter);
 app.use('/api/bicicletas',validarUsuario, bicicletasAPIRouter);
 app.use('/api/usuarios',usuariosAPIRouter);
+
 
 
 // catch 404 and forward to error handler
