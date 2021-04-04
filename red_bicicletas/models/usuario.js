@@ -48,6 +48,7 @@ var usuarioSchema = new Schema ({
 		type: Boolean,
 		default:false,
 	},
+	googleId: String,
 
 });
 usuarioSchema.plugin(uniqueValidator,{message:'el {PATH} ya existe con otro ususario'});
@@ -95,6 +96,87 @@ usuarioSchema.methods.enviar_email_bienvenida = function (cb) {
 	});
 }
 
+usuarioSchema.methods.resetPassword= function (cb) {
+	const token = new Token({_userId:this.id , token: crypto.randomBytes(16).toString('hex') });
+	const email_destination= this.email;
+	token.save(function (err) {
+		if(err) {return cb (err);}
+
+		const mailoptions = {
+			from: 'no-reply@redbicicletas.com',
+			to: email_destination,
+			subject: 'reseteo de password de cuenta',
+			text :'Hola,nn' + 'por favor,para resetear el password de su cuenta haga click: n' + 'http://localhost:7000' + '\/resetPassword\/' + token.token +'.\n'
+		};
+		mailer.sendMail(mailOptions, function(err) {
+			if (err) { return cb (err); }
+
+			console.log(' se envio un email para resetear el password a ' + email_destination + '.');
+		});
+		cb (null);
+	});
+};
+
+usuarioSchema.statics.findOneOrCreateByGoogle= function findOneOrCreate(condition,callback) {
+	const self = this;
+	console.log(condition);
+	self.findOne({
+		$or:[
+		   {'googleId': condition.id}, { 'email': condition.emails [0].value }
+		]
+	}, (err,result) => {
+		if (result) {
+			callback(err,result);
+		}else {
+			console.log('------------- CONDITION ----------');
+			console.log(condition);
+			let values = {};
+			values.googleId= condition.id;
+			values.email= condition.emails[0].values;
+			values.nombre= condition.displayName || 'SIN NOMBRE';
+			values.verificado=true;
+			values.password= condition._json.etag;
+			console.log('--------VALUES--------');
+			console.log(values);
+			self.create(values,(err,result) => {
+				if(err){console.log(err); }
+				return callback(err,result);
+			});
+
+		}
+
+	});
+};
+usuarioSchema.statics.findOneOrCreateByFacebook= function findOneOrCreate(condition,callback) {
+	const self = this;
+	console.log(condition);
+	self.findOne({
+		$or:[
+		   {'facebookId': condition.id}, { 'email': condition.emails [0].value }
+		]
+	}, (err,result) => {
+		if (result) {
+			callback(err,result);
+		}else {
+			console.log('------------- CONDITION ----------');
+			console.log(condition);
+			let values = {};
+			values.googleId= condition.id;
+			values.email= condition.emails[0].values;
+			values.nombre= condition.displayName || 'SIN NOMBRE';
+			values.verificado=true;
+			values.password= crypto.randomBytes(16).toString('hex');
+			console.log('--------VALUES--------');
+			console.log(values);
+			self.create(values,(err,result) => {
+				if(err){console.log(err); }
+				return callback(err,result);
+			});
+
+		}
+
+	});
+};
 
 
 module.exports = mongoose.model('Usuario', usuarioSchema);

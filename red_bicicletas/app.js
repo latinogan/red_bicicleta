@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const passport= require('./config/passport');
 const session = require ('express-session');
-/*const mongoDBStore= require ('connect-mongodb-session')(session);*/
+const mongoDBStore= require ('connect-mongodb-session')(session);
 const jwt= require ('jsonwebtoken');
 
 var indexRouter = require('./routes/index');
@@ -22,7 +22,24 @@ const Usuario = require ('./models/usuario');
 const Token= require('./models/token');
 
 /*Usuario.validarUsuario(token);*/
-const store = new session.MemoryStore;
+
+
+//const store = new session.MemoryStore;
+
+let store ;
+if(process.env.NODE_ENV=== 'development') {
+	store= new session.MemoryStore;
+} else{
+	store = new mongoDBStore ({
+		uri: process.env.MONGO_URI,
+		collection: 'sessions'
+	});
+	store.on('error',function(error) {
+		assert.ifError(error);
+		assert.ok(false);
+	});
+}
+
 
 var app = express();
 
@@ -155,6 +172,17 @@ app.use('/google9ab2c83bd9417off',function (req,res){
 	res.sendFile('public/google9ab2c83bd94170ff.html');
 });
 
+app.get('/auth/google',
+	passport.authenticate('google',{
+		scope: [
+		'https://www.googleapis.com/auth/plus.login',
+		'https://www.googleapis.com/auth/plus.profile.emails.read']
+	}));
+
+app.get('/auth/google/callback',passport.authenticate('google', {
+	successRedirect:'/',
+	failureRedirect:'/error'
+}));
 
 
 // catch 404 and forward to error handler

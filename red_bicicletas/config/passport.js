@@ -1,7 +1,7 @@
 const passport = require ('passport');
 const LocalStrategy = require ('passport-local').Strategy;
 const Usuario = require ('../models/usuario');
-//const GoogleStrategy = require ('passport-google-oauth20').Strategy;
+const GoogleStrategy = require ('passport-google-oauth20').Strategy;
 //const FacebookTokenStrategy = require ('passport-facebook-token');
 
 /*passport.use(new facebookStrategy ({
@@ -20,7 +20,7 @@ const Usuario = require ('../models/usuario');
 	}
 }));*/
 
-passport.use(new LocalStrategy(
+passport.use(new LocalStrategy( 
 	function(email,password,done){
 		Usuario.findOne({email:email}, function (err,usuario) {
 			if(err) return done(err);
@@ -33,20 +33,21 @@ passport.use(new LocalStrategy(
 
 ));
 
-/*passport.use(new GoogleStrategy ({
+passport.use(new GoogleStrategy ({
 	clientID: process.env.GOOGLE_CLIENT_ID,
-	clientSecret: process.env.HOST + '/auth/google/callback'
-},*/
+	clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+	callbackURL: process.env.HOST + '/auth/google/callback'
+},
 
-   /* function (accessToken,refreshToken,profile,cb) {
+    function (accessToken,refreshToken,profile,cb) {
     	console.log(profile);
 
 
     	Usuario.findOneOrCreateByGoogle(profile, function ( err,user) {
     		return cb(err,user);
     	});
-    }
-//));*/
+    })
+);
 
 passport.serializeUser(function (user,cb){
 	cb(null,user,id);
