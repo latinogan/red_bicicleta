@@ -161,11 +161,11 @@ usuarioSchema.statics.findOneOrCreateByFacebook= function findOneOrCreate(condit
 			console.log('------------- CONDITION ----------');
 			console.log(condition);
 			let values = {};
-			values.googleId= condition.id;
+			values.facebookId= condition.id;
 			values.email= condition.emails[0].values;
 			values.nombre= condition.displayName || 'SIN NOMBRE';
 			values.verificado=true;
-			values.password= crypto.randomBytes(16).toString('hex');
+			values.password= condition._json.etag;
 			console.log('--------VALUES--------');
 			console.log(values);
 			self.create(values,(err,result) => {
