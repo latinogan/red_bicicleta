@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -6,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const passport= require('./config/passport');
 const session = require ('express-session');
+/*const mongoDBStore= require ('connect-mongodb-session')(session);*/
 const jwt= require ('jsonwebtoken');
 
 var indexRouter = require('./routes/index');
@@ -37,11 +39,11 @@ app.use(session({
 
 var mongoose = require('mongoose')
 
-//var mongoDB = 'mongodb://localhost/red_bicicletas';
+var mongoDB = 'mongodb://localhost/red_bicicletas';
 //var mongoDB = mongodb+srv://admin:<password>@cluster0.xjau6.mongodb.net/test
-var mongoDB ='mongodb+srv://admin:zfL2KF5GKreSKeqr@cluster0.xjau6.mongodb.net/test'
+var mongoDB = process.env.MONGO_URI;
 
-mongoose.connect(mongoDB,{ useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoDB,{ useNewUrlParser: true, useUnifiedTopology: true ,useCreateIndex:true});
 mongoose.Promise = global.Promise;
 
 var db = mongoose.connection;
@@ -144,6 +146,14 @@ app.use('/api/auth',authAPIRouter);
 app.use('/bicicletas',loggedIn, bicicletasRouter);
 app.use('/api/bicicletas',validarUsuario, bicicletasAPIRouter);
 app.use('/api/usuarios',usuariosAPIRouter);
+
+app.use('/privacy_policy',function(req,res) {
+  res.sendFile('public/privacy_policy.html');
+});
+
+app.use('/google9ab2c83bd9417off',function (req,res){
+	res.sendFile('public/google9ab2c83bd94170ff.html');
+});
 
 
 

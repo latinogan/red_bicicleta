@@ -11,7 +11,7 @@ if (process.env.NODE_ENV==='production'){
 	};
 	mailConfig= sgTransport(options);
 }else {
-if (process.env.NODE_ENV==='staging') {
+ if (process.env.NODE_ENV==='staging') {
 	console.log ('xxxxxxxxxxxxx');
 	const options={
 		auth: {
@@ -27,8 +27,8 @@ if (process.env.NODE_ENV==='staging') {
       host: 'smtp.ethereal.email',
       port: 587 ,
       auth: {
-        user: 'eli.goodwin77@ethereal.email',
-        pass: 'wbAXfNtd7Yx2YQqqWT'
+        user: 'process.env.ethereal_user',
+        pass: 'process.env.ethereal_pwd'
       }
     };
    }
